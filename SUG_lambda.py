@@ -35,9 +35,6 @@ def lambda_handler(event, context):
         <head>
             <meta http-equiv="refresh" content="0;url={url}">
         </head>
-        <body>
-            Redirecting to <a href="{url}">Website</a>...
-        </body>
         </html>
         """
 

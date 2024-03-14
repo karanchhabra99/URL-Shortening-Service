@@ -43,5 +43,6 @@ Below is the system design diagram illustrating the flow:
 - High Level System Design: https://www.educative.io/courses/grokking-modern-system-design-interview-for-engineers-managers/system-design-tinyurl
 - Hosting a static S3 Website: https://www.youtube.com/watch?v=-l83oqcaTHg
 - AWS Cognito: https://www.youtube.com/watch?v=8a0vtkWJIA4
+- AWS Cognito - Email Extraction: https://www.youtube.com/watch?v=ALgbhPaMT1M
 - API Gateway Authentication: https://www.youtube.com/watch?v=9crTLAT_4uY
 - IAM: https://www.youtube.com/watch?v=iF9fs8Rw4Uo
