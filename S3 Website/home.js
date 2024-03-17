@@ -54,7 +54,8 @@ function create() {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`
         },
         body: JSON.stringify(payload),
         redirect: 'follow'
@@ -63,7 +64,12 @@ function create() {
         .then(responseText => {
             console.log("Response from the server:", responseText)
             Shortener_URL.style.display = 'block'
-            document.getElementById('API_Response').innerHTML = "https://sqvreaj3o7.execute-api.us-west-2.amazonaws.com/dev/" + responseText["body"] // responseText;  // Fixed: Use responseText inside the function
+            document.getElementById('API_Response').innerHTML = `
+            <form>
+            <input type="text" class="form-control" value="https://sqvreaj3o7.execute-api.us-west-2.amazonaws.com/dev/${responseText["body"]}" id="myInput">
+              </form>
+            <button class="btn btn-primary w-100 py-2" id="Copy_button" onclick="copy_text()">Copy Text</button>
+            `
         })
         .catch(error => {
             console.error("Error while making the request:", error);
@@ -73,11 +79,27 @@ function create() {
 };
 
 
+async function copy_text() {
+    /* Get the text field */
+    var copyText = document.getElementById("myInput").value;
+
+    try {
+        /* Copy the text inside the text field */
+        await navigator.clipboard.writeText(copyText);
+    
+        /* Alert the copied text */
+        var button = document.getElementById("Copy_button");
+        button.style.backgroundColor = "#337ab7";
+    } catch (err) {
+        console.error('Failed to copy text: ', err);
+    }
+};
+
 
 function delete_URL() {
     let email = fetch_email()
     // console.log()
-    let delete_provided_URL = document.getElementById("D_URL").value;
+    let delete_provided_URL = document.getElementById("D_URL").value.split("/").pop();
     let payload = {
         "UserString": delete_provided_URL,  // Fixed: Get the value of user_URL
         "email": email
