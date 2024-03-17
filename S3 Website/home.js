@@ -30,7 +30,8 @@ function fetch_email() {
     const payload_js = JSON.parse(decodedPayload);
     // document.getElementById('new_URL').innerHTML += "<BR><BR> Payload:" + payload_js["email"]
     // console.log('User email:', payload);
-    return payload_js["email"]
+    return { email: payload_js["email"], idToken: idToken };
+
 };
 
 
@@ -43,19 +44,19 @@ function addProtocol(url) {
 };
 
 function create() {
-    let email = fetch_email()
+    let { email, idToken } = fetch_email();
     let user_URL = addProtocol(document.getElementById('URL').value);
     let payload = {
         "URL": user_URL,  // Fixed: Get the value of user_URL
         "email": email
     };
-
+    // document.getElementById('API_Response').innerHTML = idToken
     fetch(create_endpoint, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
+            'Authorization': 'Bearer '+ idToken
         },
         body: JSON.stringify(payload),
         redirect: 'follow'
@@ -86,7 +87,7 @@ async function copy_text() {
     try {
         /* Copy the text inside the text field */
         await navigator.clipboard.writeText(copyText);
-    
+
         /* Alert the copied text */
         var button = document.getElementById("Copy_button");
         button.style.backgroundColor = "#337ab7";
