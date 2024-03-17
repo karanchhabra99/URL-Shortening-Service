@@ -5,6 +5,27 @@ const delete_endpoint = "https://r7e3t6bnug.execute-api.us-west-2.amazonaws.com/
 
 const Shortener_URL = document.getElementById('Shortener_URL_id');
 
+window.onload = function() {
+    user_validation();
+}
+
+function user_validation() {
+     var CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool;
+
+    var poolData = {
+        UserPoolId: 'us-west-2_6YIkORppU', // Your user pool id here
+        ClientId: '6l4dpr1nca3hlc4vnc08ihmnhb', // Your client id here
+    };
+    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+    var cognitoUser = userPool.getCurrentUser();
+
+    if (cognitoUser == null) {
+        // User not logged in
+        window.location.href = "index.html"; // Redirect to login page
+    }
+}
+
 function fetch_email() {
     const url = new URL(window.location.href) + '';
 
@@ -50,7 +71,9 @@ function create() {
         "URL": user_URL,  // Fixed: Get the value of user_URL
         "email": email
     };
-    // document.getElementById('API_Response').innerHTML = idToken
+    
+    // console.log(idToken)
+
     fetch(create_endpoint, {
         method: 'POST',
         headers: {

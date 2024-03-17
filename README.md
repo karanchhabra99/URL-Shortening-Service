@@ -52,3 +52,4 @@ HTTP: https://sqvreaj3o7.execute-api.us-west-2.amazonaws.com/dev/SSWDZBFFxSS
 - AWS Cognito - Email Extraction: https://www.youtube.com/watch?v=ALgbhPaMT1M
 - API Gateway Authentication: https://www.youtube.com/watch?v=9crTLAT_4uY
 - IAM: https://www.youtube.com/watch?v=iF9fs8Rw4Uo
+- Cognito Authentication: https://github.com/aws-amplify/amplify-js/tree/master/packages/amazon-cognito-identity-js
