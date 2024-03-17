@@ -40,6 +40,9 @@ Below is the system design diagram illustrating the flow:
 
 ## Learning
 1. Redirecting using HTTP request instead of HTML static pages
+HTML: https://redirect-sug.s3.us-west-2.amazonaws.com/d1B5LQLiMNL
+HTTP: https://sqvreaj3o7.execute-api.us-west-2.amazonaws.com/dev/SSWDZBFFxSS
+
 2. Lambda concurrency
 
 ## Reference
