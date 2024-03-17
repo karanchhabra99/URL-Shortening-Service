@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>URL Shortener Service</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-  </head>
-  
-  <BODY>
-    <header class="container text-center my-5">
-      <h1>URL Shortener Service</h1>
-      <div id = 'div_start_game'>
-        <div class="form-floating">
-            <input type="text" class="form-control" id="URL" placeholder="example.com">
-            <label id="Username_website" for="website">Website</label>
-        </div>
-        <button id="URL_shortener" class="btn btn-primary w-100 py-2" onclick="create()">Create a Shortener URL</button>
-        </div>
-        <div class="col-lg-6 col-xxl-4 my-5 mx-auto" id = 'Shortener_URL_id'>
-          <h3 id="new_URL"></h3>
 
-        </div>
-    </header>
-          
+<head>
+  <title>URL Shortener Service</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-    <script src="home.js"></script>
+<BODY>
+  <header class="container text-center my-5">
+    <h1>URL Shortener Service</h1>
+    <div id='div_start_game'>
+      <div class="form-floating">
+        <input type="text" class="form-control" id="URL" placeholder="example.com">
+        <label id="Username_website" for="website">Website</label>
+      </div>
+      <button id="URL_shortener" class="btn btn-primary w-100 py-2" onclick="create()">Create a Shortener URL</button>
+    </div>
+    <br><br>
+    <div class="col-lg-6 col-xxl-4 my-5 mx-auto" id='Shortener_URL_id'>
+      <h3 id="API_Response"></h3>
+    </div>
+    <br><br>
+    <div class="form-floating">
+      <input type="text" class="form-control" id="D_URL" placeholder="example.com">
+      <label id="Delete_Shortener_URL" for="website">Shortener URL</label>
+    </div>
+    <button id="Delete_Button" class="btn btn-primary w-100 py-2" onclick="delete_URL()">Delete the Shortener
+      URL</button>
+    </div>
+    <div class="col-lg-6 col-xxl-4 my-5 mx-auto" id='Shortener_URL_id'>
+
+    </div>
+  </header>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.283.1.min.js"></script>
+  <!-- <script src="path/to/amazon-cognito-identity.min.js"></script> -->
+
+  <script src="home.js"></script>
 </BODY>
-  
+
 </HTML>
-C:\Users\karan\OneDrive\Desktop\Projects

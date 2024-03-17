@@ -1,10 +1,11 @@
 import boto3
+from datetime import datetime
 import random
 
 def base58_encode():
     # Define the base-58 characters (excluding look-alike characters)
     base58_chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-    number = random.randint(2**63, 2**64 - 1)
+    number = random.randint(10**9, 2**64 - 1)
     # Initialize an empty result string
     result = ""
 
@@ -13,40 +14,43 @@ def base58_encode():
         digit = number % 58
         result = base58_chars[digit] + result
         number //= 58
-    result = result[:6]
+
     return result
 
 def lambda_handler(event, context):
     try:
-        url =  event[0]
-        # Retrieve a list of objects from the bucket
-        bucket_name = 'redirect-sug'
-        s3_client = boto3.client('s3')
-        objects = s3_client.list_objects(Bucket=bucket_name)
-        SOG = base58_encode()
-
-        while SOG in objects:
+        url = event["URL"]
+        email = event["email"]
+        
+        # Initialize a DynamoDB client
+        dynamodb = boto3.resource('dynamodb')
+        
+        # # Specify the table
+        table = dynamodb.Table('TinyURL-Table')
+        items ='0'
+        
+        while items:
             SOG = base58_encode()
+            
+            # Check if the new key already exists in the table
+            response = table.query(
+                KeyConditionExpression=boto3.dynamodb.conditions.Key('key').eq(SOG)
+            )
+            items = response['Items']
 
-        # HTML content for the redirecting website
-        html_content = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta http-equiv="refresh" content="0;url={url}">
-        </head>
-        </html>
-        """
-
-        # Specify your S3 bucket and object key
-        object_key = f'{SOG}.html'  # Customize the object key as needed
-
-        # Upload HTML content to S3
-        s3_client.put_object(Bucket=bucket_name, Key=object_key, Body=html_content, ContentType='text/html', ACL='public-read')
-
+        item = {
+            'time': datetime.now().isoformat(),
+            'email': email,
+            'key': SOG,
+            'url': url
+        }
+    
+        # Insert the item
+        response = table.put_item(Item=item)
+            
         return {
-            'statusCode': 200,
-            'body': SOG
+        'statusCode': 200,
+        'body': f"{SOG}"
         }
     except Exception as e:
         return {

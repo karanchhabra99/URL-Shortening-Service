@@ -1,10 +1,38 @@
 
-const endpoint = "https://r7e3t6bnug.execute-api.us-west-2.amazonaws.com/dev/";
+const create_endpoint = "https://r7e3t6bnug.execute-api.us-west-2.amazonaws.com/dev/";
+const delete_endpoint = "https://r7e3t6bnug.execute-api.us-west-2.amazonaws.com/dev/SUG-delete";
+
 
 const Shortener_URL = document.getElementById('Shortener_URL_id');
-// Shortener_URL.style.display = 'none';
 
-let user_URL = document.getElementById('URL'); // Assuming you have an input field with the ID 'URL'
+function fetch_email() {
+    const url = new URL(window.location.href) + '';
+
+    const fragment = url.split('#')[1]; // Get the URL fragment
+
+    // // Parse the fragment to extract the access token
+    const params = new URLSearchParams(fragment);
+    const accessToken = params.get('access_token');
+    const idToken = params.get('id_token');
+
+    // document.getElementById('new_URL').innerHTML = "accessToken"
+
+    // document.getElementById('new_URL').innerHTML =idToken
+    // Decode the base64-encoded access token
+    const tokenParts = idToken.split('.');
+    const payloadBase64 = tokenParts[1];
+    const decodedPayload = atob(payloadBase64);
+
+    // // // Parse the decoded payload as JSON
+    // const payload = JSON.parse(decodedPayload);
+
+    // // Extract the user email
+    const payload_js = JSON.parse(decodedPayload);
+    // document.getElementById('new_URL').innerHTML += "<BR><BR> Payload:" + payload_js["email"]
+    // console.log('User email:', payload);
+    return payload_js["email"]
+};
+
 
 // Function to add the protocol if missing
 function addProtocol(url) {
@@ -15,12 +43,14 @@ function addProtocol(url) {
 };
 
 function create() {
+    let email = fetch_email()
     let user_URL = addProtocol(document.getElementById('URL').value);
     let payload = {
         "URL": user_URL,  // Fixed: Get the value of user_URL
+        "email": email
     };
-    
-    fetch(endpoint, {
+
+    fetch(create_endpoint, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -29,15 +59,50 @@ function create() {
         body: JSON.stringify(payload),
         redirect: 'follow'
     })
-    .then(response => response.json())
-    .then(responseText => {
-        console.log("Response from the server:", responseText)
-        Shortener_URL.style.display = 'block'
-        document.getElementById('new_URL').innerHTML = "https://redirect-sug.s3.us-west-2.amazonaws.com/"+responseText["body"] // responseText;  // Fixed: Use responseText inside the function
+        .then(response => response.json())
+        .then(responseText => {
+            console.log("Response from the server:", responseText)
+            Shortener_URL.style.display = 'block'
+            document.getElementById('API_Response').innerHTML = "https://sqvreaj3o7.execute-api.us-west-2.amazonaws.com/dev/" + responseText["body"] // responseText;  // Fixed: Use responseText inside the function
+        })
+        .catch(error => {
+            console.error("Error while making the request:", error);
+        });
+    // Shortener_URL.style.display = 'block';
+    // document.getElementById('new_URL').innerHTML = JSON.stringify(payload)
+};
+
+
+
+function delete_URL() {
+    let email = fetch_email()
+    // console.log()
+    let delete_provided_URL = document.getElementById("D_URL").value;
+    let payload = {
+        "UserString": delete_provided_URL,  // Fixed: Get the value of user_URL
+        "email": email
+    };
+
+    fetch(delete_endpoint, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+        redirect: 'follow'
     })
-    .catch(error => {
-        console.error("Error while making the request:", error);
-    });
+        .then(response => response.json())
+        .then(responseText => {
+            console.log("Response from the server:", responseText)
+            Shortener_URL.style.display = 'block'
+            document.getElementById('API_Response').innerHTML = responseText["body"]// responseText;  // Fixed: Use responseText inside the function
+        })
+        .catch(error => {
+            console.error("Error while making the request:", error);
+        });
     // Shortener_URL.style.display = 'block';
     // document.getElementById('new_URL').innerHTML = JSON.stringify(payload)
 }
+
+;

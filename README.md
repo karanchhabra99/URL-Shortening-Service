@@ -38,6 +38,9 @@ Below is the system design diagram illustrating the flow:
      - **Hash-Based Lookup**: Pre-create all possible short IDs and store them in the database. Provide a short ID when a user requests a shortened URL, and mark used entries.
    - The first approach was chosen due to cost considerations for this academic project.
 
+## Learning
+1. Redirecting using HTTP request instead of HTML static pages
+2. Lambda concurrency
 
 ## Reference
 - High Level System Design: https://www.educative.io/courses/grokking-modern-system-design-interview-for-engineers-managers/system-design-tinyurl
