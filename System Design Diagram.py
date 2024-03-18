@@ -40,13 +40,19 @@
 from diagrams import Cluster, Diagram
 from diagrams.aws.compute import Lambda
 from diagrams.aws.database import Dynamodb
-from diagrams.aws.network import APIGateway
+from diagrams.aws.network import APIGateway, CloudFront
 from diagrams.aws.security import Cognito
 from diagrams.onprem.client import User
+from diagrams.aws.storage import S3
 
 with Diagram("URL Shortener System", show=True):
     user = User("Client")
     AWS_Cognito = Cognito("AWS_Cognito")
+
+    with Cluster("User Interface (UI)"):
+        ui = S3("Static Website")
+        cf = CloudFront("CloudFront")
+        user >> cf >> ui
 
     with Cluster("Shorten URL Service"):
         api_gateway = APIGateway("API Gateway")
@@ -55,7 +61,7 @@ with Diagram("URL Shortener System", show=True):
         redirect_url_lambda = Lambda("Redirect URL")
         dynamodb = Dynamodb("DynamoDB")
 
-    user >> AWS_Cognito
-    user >> api_gateway >> shorten_url_lambda >> dynamodb
+    ui >> AWS_Cognito
+    ui >> api_gateway >> shorten_url_lambda >> dynamodb
     api_gateway >> delete_url_lambda >> dynamodb
     api_gateway >> redirect_url_lambda >> dynamodb
