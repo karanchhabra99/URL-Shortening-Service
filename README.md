@@ -1,47 +1,32 @@
 # URL Shortener Service
 
-The URL shortener service provides three key functionalities:
+This project is a URL shortening service built on AWS services. It provides a secure and scalable solution to create, delete, and redirect shortened URLs.
 
-1. **Create Shortened URLs**: Allows users to generate shorter versions of long URLs.
-2. **Delete Shortened URLs**: Enables users to remove existing shortened URLs.
-3. **Redirect Users**: When a shortened URL is accessed, the service redirects the user to the original long URL.
+## Architecture
 
-## System Design
+The system uses AWS Cognito for user authentication, allowing users to interact with the AWS API Gateway. The API Gateway can trigger any of the three AWS Lambda functions:
 
-Below is the system design diagram illustrating the flow:
+1. **Shorten URL Generator**: Generates a shortened URL for a given original URL.
+2. **Delete Shorten URL**: Deletes a previously generated shortened URL.
+3. **Redirect to Original URL**: Redirects a request from the shortened URL to the original URL.
 
-![image info](./url_shortener_system.png)
+All three Lambda functions interact with DynamoDB for data storage and retrieval.
+![Architecture](url_shortener_system.png)
 
-## Workflow
+## Features
 
-1. **URL Shortening**:
-   - The client interacts with a static website hosted in an S3 bucket (cached using a CDN).
-   - The client sends a POST request via API Gateway.
-   - API Gateway triggers Lambda functions.
-   - Lambda creates the shorter URL, records it in DynamoDB, and generates a static website that redirects to the long URL.
-
-2. **URL Deletion**:
-   - Similar to URL shortening, the client interacts with the static website.
-   - A POST request via API Gateway triggers Lambda.
-   - Lambda checks if the URL exists.
-   - If authenticated, it deletes the URL from both DynamoDB and S3.
-
-## Design Decisions
-
-1. **S3 Static Website vs. AWS Amplify**:
-   - AWS S3 offers cost-effectiveness, scalability, high availability, ease of use, and security for web hosting.
-   - AWS Amplify, while more feature-rich, can be costlier and requires managing Git permissions using `.gitignore`.
-
-2. **Shortened URL Duplication Prevention**:
-   - Two approaches considered:
-     - **Unique Short IDs**: Check if the generated short ID already exists; if so, regenerate a new one.
-     - **Hash-Based Lookup**: Pre-create all possible short IDs and store them in the database. Provide a short ID when a user requests a shortened URL, and mark used entries.
-   - The first approach was chosen due to cost considerations for this academic project.
+- **User Authentication**: AWS Cognito is used for secure user authentication.
+- **URL Shortening**: Generate a unique shortened URL for any given URL.
+- **URL Deletion**: Delete a previously shortened URL.
+- **URL Redirection**: Redirect from the shortened URL to the original URL.
+- **Scalability and Performance**: The system is built on AWS services, ensuring high scalability and performance.
 
 ## Learning
 1. Redirecting using HTTP request instead of HTML static pages
 HTML: https://redirect-sug.s3.us-west-2.amazonaws.com/d1B5LQLiMNL
 HTTP: https://sqvreaj3o7.execute-api.us-west-2.amazonaws.com/dev/SSWDZBFFxSS
+
+![Old Architecture](Earlier%20Approach%20-%20url_shortener_system.png)
 
 2. Lambda concurrency
 
