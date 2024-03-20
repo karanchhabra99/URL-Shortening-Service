@@ -10,7 +10,7 @@ window.onload = function() {
 }
 
 function user_validation() {
-     var CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool;
+    var CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool;
 
     var poolData = {
         UserPoolId: 'us-west-2_6YIkORppU', // Your user pool id here
@@ -18,13 +18,23 @@ function user_validation() {
     };
     var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-    var cognitoUser = userPool.getCurrentUser();
-
-    if (cognitoUser == null) {
-        // User not logged in
-        window.location.href = "Index.html"; // Redirect to login page
-    }
+    getCurrentUser(userPool).then(cognitoUser => {
+        if (cognitoUser == null) {
+            // User not logged in
+            window.location.href = "Index.html"; // Redirect to login page
+        }
+    });
 }
+
+function getCurrentUser(userPool) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            var cognitoUser = userPool.getCurrentUser();
+            resolve(cognitoUser);
+        }, 1000); // Adjust timeout as needed
+    });
+}
+
 
 function fetch_email() {
     const url = new URL(window.location.href) + '';
