@@ -22,7 +22,7 @@ function user_validation() {
 
     if (cognitoUser == null) {
         // User not logged in
-        window.location.href = "index.html"; // Redirect to login page
+        window.location.href = "Index.html"; // Redirect to login page
     }
 }
 
