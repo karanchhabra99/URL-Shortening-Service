@@ -1,7 +1,6 @@
 
-const create_endpoint = "https://r7e3t6bnug.execute-api.us-west-2.amazonaws.com/dev/";
-const delete_endpoint = "https://r7e3t6bnug.execute-api.us-west-2.amazonaws.com/dev/SUG-delete";
-
+const create_endpoint = "https://mysr1v0fnk.execute-api.us-west-2.amazonaws.com/Dev/"
+const delete_endpoint =  "https://mysr1v0fnk.execute-api.us-west-2.amazonaws.com/Dev/Delete"
 
 const Shortener_URL = document.getElementById('Shortener_URL_id');
 
@@ -9,7 +8,7 @@ window.onload = function() {
     user_validation();
 }
 
-function user_validation() {
+async function user_validation() {
     var CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool;
 
     var poolData = {
@@ -18,12 +17,31 @@ function user_validation() {
     };
     var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
-    getCurrentUser(userPool).then(cognitoUser => {
-        if (cognitoUser == null) {
-            // User not logged in
-            window.location.href = "Index.html"; // Redirect to login page
-        }
-    });
+    var cognitoUser = await getCurrentUser(userPool);
+    if (cognitoUser == null) {
+        // User not logged in
+        console.log("Not Found")
+        console.log("User Pool:" + JSON.stringify(userPool))
+        console.log("Storage: "  + JSON.stringify(userPool.storage));
+        console.log("cognitoUser: "  +cognitoUser);
+
+        // Refresh the session
+        cognitoUser.getSession(function(err, session) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            cognitoUser.refreshSession(session.getRefreshToken(), function(err, session) {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log('session refreshed!');
+            });
+        });
+
+        // window.location.href = "Index.html"; // Redirect to login page
+    }
 }
 
 function getCurrentUser(userPool) {
@@ -131,7 +149,7 @@ async function copy_text() {
 
 
 function delete_URL() {
-    let email = fetch_email()
+    let { email, idToken } = fetch_email();
     // console.log()
     let delete_provided_URL = document.getElementById("D_URL").value.split("/").pop();
     let payload = {
@@ -143,7 +161,8 @@ function delete_URL() {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+ idToken
         },
         body: JSON.stringify(payload),
         redirect: 'follow'
