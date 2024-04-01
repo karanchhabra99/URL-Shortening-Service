@@ -45,24 +45,48 @@ from diagrams.aws.security import Cognito
 from diagrams.onprem.client import User
 from diagrams.aws.storage import S3
 
-with Diagram("URL Shortener System", show=True):
+with Diagram("URL Shortener System - Create and Delete", show=True):
     user = User("Client")
     AWS_Cognito = Cognito("AWS_Cognito")
 
     with Cluster("User Interface (UI)"):
         ui = S3("Static Website")
-        cf = CloudFront("CloudFront")
-        user >> cf >> ui
+        # cf = CloudFront("CloudFront")
+        user >>  ui
 
     with Cluster("Shorten URL Service"):
         rest_api_gateway = APIGateway("REST API Gateway")
-        http_api_gateway = APIGateway("HTTP API Gateway")
+        # http_api_gateway = APIGateway("HTTP API Gateway")
         shorten_url_lambda = Lambda("Shorten URL")
         delete_url_lambda = Lambda("Delete URL")
-        redirect_url_lambda = Lambda("Redirect URL")
+        # redirect_url_lambda = Lambda("Redirect URL")
         dynamodb = Dynamodb("DynamoDB")
 
     ui >> AWS_Cognito
     ui >> rest_api_gateway >> shorten_url_lambda >> dynamodb
     rest_api_gateway >> delete_url_lambda >> dynamodb
+    # ui >> http_api_gateway >> redirect_url_lambda >> dynamodb
+
+
+
+with Diagram("URL Shortener System - Redirect", show=True):
+    user = User("Client")
+    # AWS_Cognito = Cognito("AWS_Cognito")
+
+    with Cluster("User Interface (UI)"):
+        ui = S3("Static Website")
+        # cf = CloudFront("CloudFront")
+        user >>  ui
+
+    with Cluster("Shorten URL Service"):
+        # rest_api_gateway = APIGateway("REST API Gateway")
+        http_api_gateway = APIGateway("HTTP API Gateway")
+        # shorten_url_lambda = Lambda("Shorten URL")
+        # delete_url_lambda = Lambda("Delete URL")
+        redirect_url_lambda = Lambda("Redirect URL")
+        dynamodb = Dynamodb("DynamoDB")
+
+    # ui >> AWS_Cognito
+    # ui >> rest_api_gateway >> shorten_url_lambda >> dynamodb
+    # rest_api_gateway >> delete_url_lambda >> dynamodb
     ui >> http_api_gateway >> redirect_url_lambda >> dynamodb
